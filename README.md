@@ -1,6 +1,8 @@
 # Trefoil Loss Function
 A PyTorch drop-in topological regularizer based on the Helix-TTD Constitutional Hamiltonian.
 
+![Bess Knott](bess-knott.jpg)
+
 ## The Theory
 The `TrefoilLoss` function enforces structural alignment by penalizing neural network drift away from a mathematically stable $\gamma=1/3$ topological attractor. It acts as a geometric constraint to prevent barren plateaus and informational entropy expansion during training.
 
