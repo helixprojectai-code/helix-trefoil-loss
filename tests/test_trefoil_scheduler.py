@@ -1,4 +1,3 @@
-import pytest
 import math
 from trefoil_scheduler import TrefoilScheduler
 

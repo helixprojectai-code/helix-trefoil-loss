@@ -36,7 +36,7 @@ def constitutional_shield(
             # The Rubber Pants Condition (Postulate 004: Compressive Resonance)
             if topological_penalty > (base_loss * penalty_threshold_ratio):
                 print(
-                    f"\n⚠️ [STABILITY ALERT]: Topological Shear Critical. Engaging Rubber Pants."
+                    "\n⚠️ [STABILITY ALERT]: Topological Shear Critical. Engaging Rubber Pants."
                 )
 
                 total_loss = base_loss + topological_penalty + trace_penalty

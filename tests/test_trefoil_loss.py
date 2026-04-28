@@ -1,5 +1,4 @@
 import torch
-import pytest
 from trefoil_loss import TrefoilLoss
 
 
