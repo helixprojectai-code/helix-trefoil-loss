@@ -31,7 +31,6 @@ def simulate_training(
 
     injector = NoiseInjector(noise_level=noise_level)
 
-
     for epoch in range(epochs):
         # Base learning/optimization trajectory
         accuracy += (0.9 - accuracy) * 0.1
