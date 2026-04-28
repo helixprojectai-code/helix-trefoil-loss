@@ -1,36 +1,39 @@
 import torch
 import torch.nn as nn
 import numpy as np
-
+from typing import Union, List, Optional
+from constitutional_shield import constitutional_shield
 
 class TrefoilLoss(nn.Module):
-    def __init__(self, target_gamma=1 / 3, protection_factor=13):
-        """
-        Initializes the Trefoil Topological Constraint.
-        Args:
-            target_gamma (float): The stability attractor (default 1/3).
-            protection_factor (int): The knot crossing complexity (c_K).
-        """
-        super(TrefoilLoss, self).__init__()
+    """
+    Trefoil Topological Regularization Loss.
+    
+    Enforces knot-like stability constraints during training by penalizing
+    drift away from the topological attractor (target_gamma).
+    """
+    def __init__(
+        self, 
+        target_gamma: float = 1/3, 
+        protection_factor: int = 13,
+        drift_scale: float = 1e-6,
+        trace_weight: float = 0.1
+    ):
+        super().__init__()
         self.target_gamma = target_gamma
-        self.P = np.exp(2.302585 * protection_factor)
-
-    def forward(self, base_loss, current_gamma, weight_tensor=None):
+        self.trace_weight = trace_weight
+        
+        P = np.exp(2.302585 * protection_factor)
+        self.topological_multiplier = P * drift_scale
+        
+    @constitutional_shield(max_penalty=950.0, penalty_threshold_ratio=100.0)
+    def forward(
+        self, 
+        base_loss: torch.Tensor, 
+        current_gamma: Union[float, torch.Tensor],
+        weight_tensors: Optional[List[torch.Tensor]] = None
+    ) -> torch.Tensor:
         """
-        Calculates the topological penalty.
-        Args:
-            base_loss (Tensor): The standard loss (e.g., CrossEntropy).
-            current_gamma (float/Tensor): The shear parameter or learning rate proxy.
-            weight_tensor (Tensor, optional): The output layer weights for Trace enforcement.
+        Calculates the constitutional penalty, protected by the Rubber Pants protocol.
+        (Calculation logic handled natively by @constitutional_shield wrapper).
         """
-        # The Topological Penalty (Drift from the Attractor)
-        drift = torch.abs(current_gamma - self.target_gamma)
-        topological_penalty = (drift**2) * (self.P / 1e6)
-
-        # The Trace Invariant (|Tr| = 4)
-        trace_penalty = 0.0
-        if weight_tensor is not None:
-            weight_norm = torch.norm(weight_tensor, p=2)
-            trace_penalty = torch.abs(weight_norm - 4.0) * 0.1
-
-        return base_loss + topological_penalty + trace_penalty
+        pass
