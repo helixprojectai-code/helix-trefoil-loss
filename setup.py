@@ -11,7 +11,12 @@ setup(
     url="https://github.com/helixprojectai-code/helix-trefoil-loss",
     # find_packages() only finds directories with __init__.py.
     # Since our module is a single file (trefoil_loss.py), we need py_modules.
-    py_modules=["trefoil_loss", "grok_trefoil_loss", "constitutional_shield", "trefoil_scheduler"],
+    py_modules=[
+        "trefoil_loss",
+        "grok_trefoil_loss",
+        "constitutional_shield",
+        "trefoil_scheduler",
+    ],
     install_requires=["torch>=1.9.0", "numpy>=1.20.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
