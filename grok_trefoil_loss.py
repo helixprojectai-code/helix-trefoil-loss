@@ -71,7 +71,7 @@ class TrefoilLoss(nn.Module):
 
         # === Topological Drift Penalty ===
         drift = torch.abs(current_gamma - self.target_gamma)
-        topological_penalty = (drift ** 2) * (self.P * self.drift_scale)
+        topological_penalty = (drift**2) * (self.P * self.drift_scale)
 
         # === Trace Invariant Penalty (|Tr| ≈ 4 for trefoil representation) ===
         trace_penalty = torch.tensor(0.0, device=base_loss.device)
@@ -88,13 +88,13 @@ class TrefoilLoss(nn.Module):
 # Optional: Simple helper for common usage
 def create_trefoil_criterion(
     base_criterion: nn.Module,
-    target_gamma: float = 1/3,
+    target_gamma: float = 1 / 3,
     protection_factor: int = 13,
 ) -> callable:
     """Convenience factory for standard training loops."""
     trefoil = TrefoilLoss(target_gamma, protection_factor)
 
-    def criterion(outputs, labels, current_gamma=1/3, output_weights=None):
+    def criterion(outputs, labels, current_gamma=1 / 3, output_weights=None):
         base_loss = base_criterion(outputs, labels)
         return trefoil(base_loss, current_gamma, output_weights)
 

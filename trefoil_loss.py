@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 import numpy as np
 
+
 class TrefoilLoss(nn.Module):
-    def __init__(self, target_gamma=1/3, protection_factor=13):
+    def __init__(self, target_gamma=1 / 3, protection_factor=13):
         """
         Initializes the Trefoil Topological Constraint.
         Args:
@@ -12,8 +13,8 @@ class TrefoilLoss(nn.Module):
         """
         super(TrefoilLoss, self).__init__()
         self.target_gamma = target_gamma
-        self.P = np.exp(2.302585 * protection_factor) 
-        
+        self.P = np.exp(2.302585 * protection_factor)
+
     def forward(self, base_loss, current_gamma, weight_tensor=None):
         """
         Calculates the topological penalty.
@@ -24,12 +25,12 @@ class TrefoilLoss(nn.Module):
         """
         # The Topological Penalty (Drift from the Attractor)
         drift = torch.abs(current_gamma - self.target_gamma)
-        topological_penalty = (drift ** 2) * (self.P / 1e6)
-        
+        topological_penalty = (drift**2) * (self.P / 1e6)
+
         # The Trace Invariant (|Tr| = 4)
         trace_penalty = 0.0
         if weight_tensor is not None:
             weight_norm = torch.norm(weight_tensor, p=2)
-            trace_penalty = torch.abs(weight_norm - 4.0) * 0.1 
-            
+            trace_penalty = torch.abs(weight_norm - 4.0) * 0.1
+
         return base_loss + topological_penalty + trace_penalty

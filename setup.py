@@ -10,17 +10,14 @@ setup(
     author_email="steve@helixprojectai.com",
     url="https://github.com/helixprojectai-code/helix-trefoil-loss",
     packages=find_packages(),
-    install_requires=[
-        "torch>=1.9.0",
-        "numpy>=1.20.0"
-    ],
+    install_requires=["torch>=1.9.0", "numpy>=1.20.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "Topic :: Scientific/Engineering :: Physics"
+        "Topic :: Scientific/Engineering :: Physics",
     ],
     python_requires=">=3.7",
 )
