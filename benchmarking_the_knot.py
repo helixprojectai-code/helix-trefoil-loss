@@ -31,8 +31,6 @@ def simulate_training(
 
     injector = NoiseInjector(noise_level=noise_level)
 
-    # Protection Factor 13 rigidity (Topological Drag)
-    P = np.exp(2.302585 * 13)
 
     for epoch in range(epochs):
         # Base learning/optimization trajectory
