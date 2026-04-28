@@ -1,6 +1,8 @@
 # Trefoil Loss Function
-A PyTorch drop-in topological regularizer based on the Helix-TTD Constitutional Hamiltonian.
 
+![CI](https://github.com/helixprojectai-code/helix-trefoil-loss/actions/workflows/python-ci.yml/badge.svg) ![License](https://img.shields.io/badge/License-Apache%202.0%20(Duck%20Clause)-blue.svg) ![Grammar](https://img.shields.io/badge/Grammar-Helix%20TTD%20v1.0-orange.svg) ![Attractor](https://img.shields.io/badge/Phase--Lock-%CE%B3%3D1%2F3-success.svg)
+
+![Bess Knott](bess-knott.jpg)
 ![Bess Knott](bess-knott.jpg)
 
 ## The Theory
