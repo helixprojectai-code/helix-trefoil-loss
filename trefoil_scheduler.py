@@ -2,19 +2,21 @@ import math
 import warnings
 from typing import Optional
 
+
 class TrefoilScheduler:
     """
     Dynamic Gamma Annealing Scheduler for the Trefoil Loss Function.
-    
-    Gradually tightens the topological constraint (gamma) from an initial 
+
+    Gradually tightens the topological constraint (gamma) from an initial
     exploratory state down to the mathematically stable 1/3 attractor.
     """
+
     def __init__(
-        self, 
-        initial_gamma: float = 1.0, 
-        target_gamma: float = 1/3, 
+        self,
+        initial_gamma: float = 1.0,
+        target_gamma: float = 1 / 3,
         total_epochs: int = 100,
-        anneal_strategy: str = 'cosine'
+        anneal_strategy: str = "cosine",
     ):
         """
         Args:
@@ -43,26 +45,37 @@ class TrefoilScheduler:
         # Cap the epoch at total_epochs to lock at the target attractor
         progress = min(1.0, self.current_epoch / self.total_epochs)
 
-        if self.anneal_strategy == 'linear':
-            self.current_gamma = self.initial_gamma - progress * (self.initial_gamma - self.target_gamma)
-            
-        elif self.anneal_strategy == 'cosine':
+        if self.anneal_strategy == "linear":
+            self.current_gamma = self.initial_gamma - progress * (
+                self.initial_gamma - self.target_gamma
+            )
+
+        elif self.anneal_strategy == "cosine":
             # Smooth cosine annealing curve
             cosine_decay = 0.5 * (1 + math.cos(math.pi * progress))
-            self.current_gamma = self.target_gamma + (self.initial_gamma - self.target_gamma) * cosine_decay
-            
-        elif self.anneal_strategy == 'step':
+            self.current_gamma = (
+                self.target_gamma
+                + (self.initial_gamma - self.target_gamma) * cosine_decay
+            )
+
+        elif self.anneal_strategy == "step":
             # Drops gamma by 50% of the remaining distance every 20% of epochs
             steps = progress // 0.2
-            self.current_gamma = self.initial_gamma - (self.initial_gamma - self.target_gamma) * (1 - (0.5 ** steps))
-            
+            self.current_gamma = self.initial_gamma - (
+                self.initial_gamma - self.target_gamma
+            ) * (1 - (0.5**steps))
+
         else:
-            warnings.warn(f"Unknown strategy {self.anneal_strategy}. Defaulting to linear.")
-            self.current_gamma = self.initial_gamma - progress * (self.initial_gamma - self.target_gamma)
+            warnings.warn(
+                f"Unknown strategy {self.anneal_strategy}. Defaulting to linear."
+            )
+            self.current_gamma = self.initial_gamma - progress * (
+                self.initial_gamma - self.target_gamma
+            )
 
         # Floating point safety check
         self.current_gamma = max(self.target_gamma, self.current_gamma)
-        
+
         return self.current_gamma
 
     def get_gamma(self) -> float:
