@@ -19,3 +19,10 @@ base_loss = standard_criterion(outputs, labels)
 total_loss = criterion(base_loss, current_gamma=torch.tensor(1/3))
 total_loss.backward()
 ```
+
+---
+
+![CI Status](https://github.com/helixprojectai-code/helix-trefoil-loss/actions/workflows/python-ci.yml/badge.svg)
+![License](https://img.shields.io/badge/License-Apache_2.0_with_Duck_Clause-blue.svg)
+![Constitutional Grammar](https://img.shields.io/badge/Helix_TTD-v1.0-orange.svg)
+![Phase-Lock](https://img.shields.io/badge/Attractor-γ=1/3-brightgreen.svg)
