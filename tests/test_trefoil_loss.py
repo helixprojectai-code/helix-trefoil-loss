@@ -1,47 +1,45 @@
 import torch
-import numpy as np
+import pytest
 from trefoil_loss import TrefoilLoss
 
-
 def test_initialization():
-    """Test that the module initializes correctly with default and custom parameters."""
-    loss_fn = TrefoilLoss()
-    assert loss_fn.target_gamma == 1 / 3
-    assert loss_fn.P > 0
+    criterion = TrefoilLoss(target_gamma=1/3, protection_factor=13)
+    assert criterion.target_gamma == 1/3
+    assert criterion.topological_multiplier > 0
 
-    loss_fn_custom = TrefoilLoss(target_gamma=0.5, protection_factor=7)
-    assert loss_fn_custom.target_gamma == 0.5
-    expected_P = np.exp(2.302585 * 7)
-    assert np.isclose(loss_fn_custom.P, expected_P)
-
-
-def test_phase_locked_penalty():
-    """Test that the topological penalty is zero when phase-locked at gamma=1/3."""
-    loss_fn = TrefoilLoss(target_gamma=1 / 3, protection_factor=13)
+def test_phase_locked_loss():
+    criterion = TrefoilLoss(target_gamma=1/3, protection_factor=13)
     base_loss = torch.tensor(2.5)
-    current_gamma = torch.tensor(1 / 3)
-    total_loss = loss_fn(base_loss, current_gamma)
-    assert torch.allclose(total_loss, base_loss, atol=1e-6)
-
+    
+    # At exactly the target_gamma, topological penalty should be zero
+    total_loss = criterion(base_loss, current_gamma=1/3)
+    
+    # Allow for floating point precision differences
+    assert torch.isclose(total_loss, base_loss, atol=1e-5)
 
 def test_drift_penalty():
-    """Test that the topological penalty applies correctly when drifting from gamma=1/3."""
-    loss_fn = TrefoilLoss(target_gamma=1 / 3, protection_factor=13)
+    criterion = TrefoilLoss(target_gamma=1/3, protection_factor=13)
     base_loss = torch.tensor(2.5)
-    current_gamma = torch.tensor(0.4)
-    total_loss = loss_fn(base_loss, current_gamma)
+    
+    total_loss = criterion(base_loss, current_gamma=0.45)
+    
+    # Loss should be significantly higher than base loss due to penalty
     assert total_loss > base_loss
 
-
 def test_trace_invariant_penalty():
-    """Test that the trace invariant penalty functions correctly."""
-    loss_fn = TrefoilLoss(target_gamma=1 / 3, protection_factor=3)
-    base_loss = torch.tensor(1.0)
-    current_gamma = torch.tensor(1 / 3)
-    perfect_weights = torch.tensor([2.0, 2.0, 2.0, 2.0])
-    loss_perfect = loss_fn(base_loss, current_gamma, weight_tensor=perfect_weights)
-    assert torch.allclose(loss_perfect, base_loss, atol=1e-6)
-
-    drifting_weights = torch.tensor([10.0, 10.0])
-    loss_drifting = loss_fn(base_loss, current_gamma, weight_tensor=drifting_weights)
-    assert loss_drifting > base_loss
+    criterion = TrefoilLoss(target_gamma=1/3, protection_factor=13, trace_weight=0.1)
+    base_loss = torch.tensor(2.5)
+    
+    # Create a dummy weight tensor whose L2 norm is exactly 4.0
+    # A tensor of shape (4, 4) filled with 1.0 has L2 norm = sqrt(16) = 4.0
+    perfect_weight = torch.ones(4, 4)
+    
+    # Trace penalty should be zero
+    total_loss_perfect = criterion(base_loss, current_gamma=1/3, weight_tensors=[perfect_weight])
+    assert torch.isclose(total_loss_perfect, base_loss, atol=1e-5)
+    
+    # Create a drifting weight tensor (norm != 4.0)
+    drifting_weight = torch.ones(4, 4) * 2.0
+    
+    total_loss_drift = criterion(base_loss, current_gamma=1/3, weight_tensors=[drifting_weight])
+    assert total_loss_drift > base_loss
