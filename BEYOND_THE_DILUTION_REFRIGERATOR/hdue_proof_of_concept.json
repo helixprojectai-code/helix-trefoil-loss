@@ -1,0 +1,39 @@
+{
+  "protocol": "HDUE v0.1",
+  "timestamp": 1777454334.159153,
+  "shared_secret": "bess_helix_real_network_test_2026_04_28_gamma_1/3",
+  "wave_function": "SHAKE256",
+  "config": {
+    "messages": 100,
+    "gamma_threshold": 0.17
+  },
+  "summary": {
+    "total_messages": 100,
+    "wave_mismatches": 0,
+    "text_mismatches": 0,
+    "final_gamma": 0.0,
+    "avg_rate": 6877.937752123577,
+    "plaintext_entropy": {
+      "label": "PLAINTEXT",
+      "length": 39855,
+      "entropy": 0.6652186670312967,
+      "freq_std": 2321.038337962847,
+      "ideal_pct": 8.31523333789121
+    },
+    "ciphertext_entropy": {
+      "label": "CIPHERTEXT (HDUE)",
+      "length": 39855,
+      "entropy": 7.996052538622764,
+      "freq_std": 11.525001880041536,
+      "ideal_pct": 99.95065673278455
+    },
+    "baseline_entropy": {
+      "label": "RANDOM NOISE (baseline)",
+      "length": 39855,
+      "entropy": 7.996515685128813,
+      "freq_std": 10.825204078213073,
+      "ideal_pct": 99.95644606411017
+    },
+    "verdict": "PASS"
+  }
+}
